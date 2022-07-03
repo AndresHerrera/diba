@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>DIBA</title>
+	
+	<link rel="stylesheet" href="lib/leaflet/leaflet.css" />
+	<script src="lib/leaflet/leaflet.js"></script>
+	
+	<script src="lib/esri-leaflet-v3.0.8/esri-leaflet.js"></script>
+	
+	<script src="lib/Proj4Leaflet/lib/proj4-compressed.js"></script>
+	<script src="lib/Proj4Leaflet/src/proj4leaflet.js"></script>
+	
+</head>
+<body>
+
+<div id="mapid" style="width: 600px; height: 400px;">
+</div>
+
+<script>    
+
+	
+	var mymap = L.map('mapid',{
+		continuousWorld: true,
+		worldCopyJump: false,
+	}).setView([41.38879, 2.15899], 13);
+	
+	
+	var crs25831 = new L.Proj.CRS('EPSG:25831', 
+				'+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
+				{
+				resolutions: [1100, 550, 275, 100, 50, 25, 10, 5, 2, 1, 0.5, 0.25]
+				}
+			);
+	
+				 
+	
+	let Streets = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', 
+		{
+			maxZoom: 19,
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		});
+
+	let PPU_new = L.esri.tiledMapLayer({
+          url: "https://gissrv.diba.cat/arcgis/services/INCENDIS/Incendis_diba_public/MapServer/WMSServer/",
+		  layers: '1',
+		   format: 'image/svg+xml',
+		   crs: crs25831,
+		   transparent: true,
+		   version: '1.3.0',
+		  attribution : 'Secretariat de Federacion i ADF de Catalunya '
+        })
+		
+		
+	
+	/*let PPU = L.tileLayer.wms('https://gissrv.diba.cat/arcgis/services/INCENDIS/Incendis_diba_public/MapServer/WMSServer/', {
+      layers: '1',
+      format: 'image/svg+xml',
+	  crs: crs25831,
+      transparent: true,
+      opacity : 0.5,
+	  continuousWorld: true,
+      version: '1.3.0',
+	  updateWhenIdle: false,
+	  reuseTiles: true,
+	  tileSize: 1000,
+	  showTheRasterReturned: true,
+      attribution : 'Secretariat de Federacion i ADF de Catalunya '
+	  });*/
+	  
+	 
+	  Streets.addTo(mymap);
+	  PPU_new.addTo(mymap);
+
+</script>
+
+</body>
+</html>
